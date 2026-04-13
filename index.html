@@ -987,8 +987,8 @@
 
     <script src="script.js"></script>
     <script>
-        // Inicializar 3D cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar 3D inmediatamente si ya está cargado
+        function init3D() {
             const container = document.getElementById('stl-container');
             if (!container) {
                 console.error('Contenedor STL no encontrado');
@@ -1125,6 +1125,12 @@
             } else {
                 console.error('Video no encontrado');
             }
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init3D);
+        } else {
+            init3D();
+        }
     </script>
 </html>
