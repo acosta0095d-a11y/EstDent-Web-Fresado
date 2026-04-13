@@ -1,98 +1,158 @@
-// --- CONFIGURACIÓN DEL MENÚ MÓVIL Y SIDEBAR ---
-const openBtn = document.getElementById('open-menu-btn');
-const closeBtn = document.getElementById('close-menu-btn');
-const sidebar = document.getElementById('mobile-sidebar');
-const overlay = document.getElementById('mobile-overlay');
-const sidebarLinks = document.querySelectorAll('.sidebar-link'); // Selecciona los links del menú lateral
+document.addEventListener('DOMContentLoaded', () => {
+    const openBtn = document.getElementById('open-menu-btn');
+    const closeBtn = document.getElementById('close-menu-btn');
+    const sidebar = document.getElementById('mobile-sidebar');
+    const overlay = document.getElementById('mobile-overlay');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
 
-// Función para ABRIR el menú
-function openMenu() {
-    if (sidebar && overlay) {
-        sidebar.classList.remove('translate-x-full'); // Trae el menú a la pantalla
-        overlay.classList.remove('hidden'); // Muestra el fondo oscuro
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0'); // Efecto fade-in suave
-        }, 10);
-    }
-}
+    const closeMenu = () => {
+        if (!sidebar || !overlay) return;
+        sidebar.classList.add('translate-x-full');
+        overlay.classList.add('opacity-0');
+        overlay.style.pointerEvents = 'none';
+        overlay.classList.add('hidden');
+        document.body.classList.remove('menu-open');
+        updateHamburgerVisibility();
+    };
 
-// Función para CERRAR el menú
-function closeMenu() {
-    if (sidebar && overlay) {
-        sidebar.classList.add('translate-x-full'); // Saca el menú de la pantalla
-        overlay.classList.add('opacity-0'); // Efecto fade-out
-        setTimeout(() => {
-            overlay.classList.add('hidden'); // Oculta el fondo después de la animación
-        }, 300);
-    }
-}
+    const openMenu = () => {
+        if (!sidebar || !overlay || !hamburgerButton) return;
+        sidebar.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+        overlay.style.pointerEvents = 'auto';
+        overlay.classList.remove('opacity-0');
+        document.body.classList.add('menu-open');
+        hamburgerButton.classList.add('hidden');
+    };
 
-// Eventos de botones (Verificamos que existan para evitar errores)
-if (openBtn) openBtn.addEventListener('click', openMenu);
-if (closeBtn) closeBtn.addEventListener('click', closeMenu);
-if (overlay) overlay.addEventListener('click', closeMenu); // Cierra si tocas el fondo oscuro
+    const hamburgerButton = openBtn;
+    const isMenuOpen = () => document.body.classList.contains('menu-open');
+    const isMobileScreen = () => window.matchMedia('(max-width: 1023px)').matches;
+    const updateHamburgerVisibility = () => {
+        if (!hamburgerButton) return;
+        if (isMenuOpen()) {
+            hamburgerButton.classList.add('hidden');
+            hamburgerButton.classList.remove('show-mobile');
+            hamburgerButton.classList.remove('show-desktop');
+            return;
+        }
 
-// Cierra el menú automáticamente al tocar un enlace del sidebar
-sidebarLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        // Un pequeño retraso para que el usuario sienta el "clic" antes de que desaparezca
-        setTimeout(closeMenu, 100); 
+        if (isMobileScreen()) {
+            hamburgerButton.classList.remove('hidden');
+            hamburgerButton.classList.add('show-mobile');
+            hamburgerButton.classList.remove('show-desktop');
+        } else {
+            hamburgerButton.classList.remove('show-mobile');
+            hamburgerButton.classList.remove('show-desktop');
+            if (window.scrollY > 50) {
+                hamburgerButton.classList.remove('hidden');
+                hamburgerButton.classList.add('show-desktop');
+            } else {
+                hamburgerButton.classList.add('hidden');
+            }
+        }
+    };
+
+    const handleHeaderScroll = () => {
+        const header = document.getElementById('main-header');
+        if (!header) return;
+        const isMobile = isMobileScreen();
+        const shouldShrink = !isMobile && window.scrollY > 50;
+        if (shouldShrink) {
+            header.classList.add('header-shrink', 'fixed');
+            if (hamburgerButton) {
+                hamburgerButton.classList.remove('hidden');
+                hamburgerButton.classList.add('show-desktop');
+            }
+        } else {
+            header.classList.remove('header-shrink', 'fixed');
+            if (hamburgerButton && !isMobile) {
+                hamburgerButton.classList.add('hidden');
+                hamburgerButton.classList.remove('show-desktop');
+            }
+        }
+    };
+
+    window.addEventListener('resize', () => {
+        updateHamburgerVisibility();
+        handleHeaderScroll();
     });
+    window.addEventListener('scroll', handleHeaderScroll);
+    updateHamburgerVisibility();
+    handleHeaderScroll();
+
+    // Abre con el botón hamburguesa
+    if (openBtn) {
+        openBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            openMenu();
+        });
+    }
+
+    // Cierra con el botón X
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            closeMenu();
+        });
+    }
+
+    // Cierra al clickear el overlay (fondo oscuro)
+    if (overlay) {
+        overlay.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeMenu();
+        });
+    }
+
+    // Cierra al clickear cualquier enlace del menú
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            closeMenu();
+        });
+    });
+
+    // Evita que clicks dentro del sidebar cierren el menú
+    if (sidebar) {
+        sidebar.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+
+    // WhatsApp
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    if (whatsappBtn) {
+        whatsappBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            irAWhatsapp();
+        });
+    }
+
+    // Scroll cards observer
+    const scrollCards = document.querySelectorAll('.scroll-zoom');
+    if (scrollCards.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                }
+            });
+        }, observerOptions);
+
+        scrollCards.forEach(card => cardObserver.observe(card));
+    }
 });
 
-// --- LÓGICA DE WHATSAPP ---
 function irAWhatsapp() {
-    const telefono = "573142194594"; // Número de Colombia actualizado
+    const telefono = "573142194594";
     const mensaje = "Hola, estoy interesado en un servicio de fresado con la inLab MC X5.";
     window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');
 }
-
-// Configurar el botón flotante de WhatsApp
-const whatsappBtn = document.getElementById('whatsappBtn');
-if (whatsappBtn) {
-    whatsappBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        irAWhatsapp();
-    });
-}
-
-// --- EFECTO DE SCROLL EN EL HEADER ---
-window.addEventListener('scroll', () => {
-    const header = document.getElementById('main-header'); // Usamos el ID específico
-    if (header) {
-        if (window.scrollY > 50) {
-            // Aquí estaba el detalle: debe ser 'header-scrolled' para coincidir con tu CSS
-            header.classList.add('header-scrolled'); 
-        } else {
-            header.classList.remove('header-scrolled');
-        }
-    }
-});
-
-
-// --- ANIMACIÓN DE ZOOM AL HACER SCROLL (SECCIÓN SERVICIOS) ---
-document.addEventListener("DOMContentLoaded", function() {
-    // Seleccionamos todas las tarjetas con la clase scroll-zoom
-    const scrollCards = document.querySelectorAll('.scroll-zoom');
-    
-    // Configuramos el observador
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.15 // Se activa cuando el 15% de la tarjeta entra en la pantalla
-    };
-
-    const cardObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // Le agrega la clase que la hace crecer y aparecer
-                entry.target.classList.add('in-view');
-            }
-        });
-    }, observerOptions);
-
-    // Ponemos a observar cada tarjeta
-    scrollCards.forEach(card => {
-        cardObserver.observe(card);
-    });
-});

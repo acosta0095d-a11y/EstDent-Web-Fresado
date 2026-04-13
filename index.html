@@ -17,10 +17,15 @@
 
     <meta property="og:title" content="EstDent | Fresado Digital de Alta Precisión">
     <meta property="og:description" content="Soluciones CAD/CAM con tecnología alemana. Ajuste marginal garantizado en Disilicato, Zirconio y PMMA. Envíos a toda Colombia.">
+    <link rel="canonical" href="https://www.estdent.com.co/">
+    <meta name="robots" content="index, follow">
+
     <meta property="og:image" content="https://www.estdent.com.co/images/EstDentLogo.png">
     <meta property="og:url" content="https://www.estdent.com.co/">
     <meta property="og:type" content="website">
 
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/STLLoader.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,9 +33,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        html, body {
+            min-height: 100%;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            background-color: #0f172a;
+        }
         body { 
             font-family: 'Inter', -apple-system, sans-serif; 
-            background-color: #f8fafc; 
+            background-color: transparent;
+            width: 100%;
+            max-width: 100%;
+            zoom: 1;
+            transform-origin: top center;
+        }
+        @media (min-width: 1200px) {
+            body {
+                zoom: 0.9;
+            }
+        }
+        @media (max-width: 768px) {
+            body {
+                width: 100%;
+                max-width: 100%;
+                zoom: 1;
+            }
         }
         
         /* Custom Scrollbar */
@@ -146,12 +174,12 @@
 <body class="text-slate-800 antialiased overflow-x-hidden selection:bg-[#0ea5e9] selection:text-white">
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5DRKBPQV" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-    <div id="mobile-overlay" class="fixed inset-0 bg-slate-900/90 z-[9998] hidden backdrop-blur-md transition-opacity duration-300"></div>
+    <div id="mobile-overlay" class="fixed inset-0 bg-transparent z-[9998] hidden opacity-0 transition-opacity duration-300"></div>
     
-    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-[85%] max-w-[320px] bg-slate-900 z-[9999] shadow-[-20px_0_50px_rgba(0,0,0,0.7)] transform translate-x-full transition-transform duration-500 flex flex-col border-l border-slate-800">
-        <div class="p-6 flex justify-between items-center border-b border-slate-800">
+    <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-[85%] max-w-[320px] bg-slate-950/95 z-[10002] shadow-2xl transform translate-x-full transition-transform duration-500 flex flex-col border-l border-slate-800">
+        <div class="p-6 flex justify-between items-center border-b border-slate-800 bg-slate-900/90 backdrop-blur-sm">
             <img src="images/EstDentLogo.png" alt="EstDent Logo" class="h-8 w-auto brightness-0 invert">
-            <button id="close-menu-btn" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-colors p-2 rounded-full">
+            <button id="close-menu-btn" class="text-slate-200 hover:text-white bg-slate-800/90 hover:bg-slate-700/90 transition-colors p-2 rounded-full">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
@@ -161,49 +189,52 @@
                 <li><a href="#inicio" class="sidebar-link block p-4 rounded-xl text-slate-300 font-bold hover:bg-[#0ea5e9] hover:text-white transition-all flex items-center gap-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> Inicio</a></li>
                 <li><a href="#tecnologia" class="sidebar-link block p-4 rounded-xl text-slate-300 font-bold hover:bg-[#0ea5e9] hover:text-white transition-all flex items-center gap-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Tecnología</a></li>
                 <li><a href="#servicios" class="sidebar-link block p-4 rounded-xl text-slate-300 font-bold hover:bg-[#0ea5e9] hover:text-white transition-all flex items-center gap-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> Catálogo Clínico</a></li>
+                <li><a href="#proceso-diseno" class="sidebar-link block p-4 rounded-xl text-slate-300 font-bold hover:bg-[#0ea5e9] hover:text-white transition-all flex items-center gap-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg> Proceso de Diseño</a></li>
                 <li><a href="#proceso" class="sidebar-link block p-4 rounded-xl text-slate-300 font-bold hover:bg-[#0ea5e9] hover:text-white transition-all flex items-center gap-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg> Flujo Digital</a></li>
                 <li><a href="#trabajos" class="sidebar-link block p-4 rounded-xl text-slate-300 font-bold hover:bg-[#0ea5e9] hover:text-white transition-all flex items-center gap-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg> Galería</a></li>
             </ul>
         </nav>
         <div class="p-6 border-t border-slate-800">
-            <a href="https://wa.me/573142194594" target="_blank" class="block w-full py-4 bg-[#0ea5e9] text-white text-center rounded-xl font-black shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:bg-[#0284c7] transition-all active:scale-95 uppercase tracking-wide flex items-center justify-center gap-2">
+            <a href="https://wa.me/573142194594" target="_blank" class="block w-full py-4 bg-[#25D366] text-white text-center rounded-xl font-black shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20ba5a] transition-all active:scale-95 uppercase tracking-wide flex items-center justify-center gap-2">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                 Hablar con un Asesor
             </a>
         </div>
     </aside>
 
-    <header class="absolute top-0 left-0 w-full z-[100] bg-transparent pt-6 pb-4">
-        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <header id="main-header" class="absolute top-0 left-0 w-full z-[100] bg-transparent pt-6 pb-4">
+        <div class="w-full px-4 sm:px-5 lg:px-6 flex items-center justify-between header-inner">
             <a href="#inicio" class="block z-50 hover:opacity-90 transition-opacity">
                 <img src="images/EstDentLogo.png" alt="EstDent Logo" class="h-10 md:h-12 lg:h-14 w-auto brightness-0 invert drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
             </a>
-            <nav aria-label="Menú principal de navegación" class="hidden md:flex items-center gap-8 bg-slate-900/60 backdrop-blur-md px-8 py-3.5 rounded-full border border-white/10 shadow-lg">
+            <nav aria-label="Menú principal de navegación" class="hidden md:flex items-center justify-end gap-8 bg-slate-900/60 backdrop-blur-md px-8 py-3.5 rounded-full border border-white/10 shadow-lg">
                 <a href="#tecnologia" class="text-white/90 font-bold text-xs hover:text-[#0ea5e9] transition-colors tracking-widest uppercase">Tecnología</a>
                 <a href="#ventajas" class="text-white/90 font-bold text-xs hover:text-[#0ea5e9] transition-colors tracking-widest uppercase">Por qué elegirnos</a>
                 <a href="#servicios" class="text-white/90 font-bold text-xs hover:text-[#0ea5e9] transition-colors tracking-widest uppercase">Catálogo</a>
+                <a href="#proceso-diseno" class="text-white/90 font-bold text-xs hover:text-[#0ea5e9] transition-colors tracking-widest uppercase">Proceso de Diseño</a>
                 <a href="#proceso" class="text-white/90 font-bold text-xs hover:text-[#0ea5e9] transition-colors tracking-widest uppercase">Proceso</a>
                 <div class="w-px h-5 bg-white/20"></div>
                 <a href="#contacto" class="bg-[#0ea5e9] text-white px-6 py-2.5 rounded-full font-black hover:bg-[#0284c7] hover:shadow-[0_0_15px_rgba(14,165,233,0.5)] active:scale-95 transition-all duration-300 text-xs uppercase tracking-widest flex items-center gap-2">
                     Cotizar <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </a>
             </nav>
-            <button id="open-menu-btn" class="md:hidden text-white p-2 drop-shadow-md active:scale-90 transition-transform bg-slate-900/50 backdrop-blur-sm rounded-lg border border-white/10">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
         </div>
     </header>
 
-<main id="inicio" class="relative w-full h-[90vh] flex items-center justify-center overflow-hidden bg-slate-900 border-b-8 border-[#0ea5e9]">
+    <button id="open-menu-btn" class="floating-hamburger hidden active:scale-95 transition-transform" aria-label="Abrir menú">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+    </button>
+
+<main id="inicio" class="relative w-full h-[110vh] md:h-[115vh] min-h-screen flex items-center justify-center overflow-hidden bg-slate-900 border-b-8 border-[#0ea5e9] reveal">
         <div class="absolute inset-0 z-0">
             <video src="images/fresado.mp4" autoplay loop muted playsinline class="w-full h-full object-cover opacity-60"></video>
             <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/70 to-transparent"></div>
         </div>
 
-        <div class="relative z-20 flex items-center justify-start w-full h-full max-w-7xl mx-auto px-6">
-            <div class="w-full max-w-2xl flex flex-col items-start text-left pt-10">
+        <div class="relative z-20 flex items-center justify-start w-full h-full px-4 sm:px-5 lg:px-6 hero-inner">
+            <div class="w-full max-w-2xl flex flex-col items-start text-left pt-16 md:pt-24 hero-text">
                 
                 <div class="bg-[#0ea5e9]/20 border border-[#0ea5e9]/50 px-4 py-1.5 rounded-md mb-6 backdrop-blur-sm">
                     <span class="text-xs md:text-sm font-black text-[#0ea5e9] uppercase tracking-widest flex items-center gap-2">
@@ -249,12 +280,11 @@
             <span class="mx-8 flex items-center gap-3"><svg class="w-5 h-5 text-sky-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Sirona inLab MC X5</span>
             <span class="mx-8 flex items-center gap-3"><svg class="w-5 h-5 text-sky-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Connect Case Center</span>
             <span class="mx-8 flex items-center gap-3"><svg class="w-5 h-5 text-sky-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Ajuste Micrométrico</span>
-            <span class="mx-8 flex items-center gap-3"><svg class="w-5 h-5 text-sky-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Zirconio Multicapa Premium</span>
-            <span class="mx-8 flex items-center gap-3"><svg class="w-5 h-5 text-sky-200" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Despachos a Nivel Nacional</span>
         </div>
     </div>
+</div>
 
-  <section id="tecnologia" class="py-24 bg-white relative overflow-hidden">
+  <section id="tecnologia" class="py-24 bg-white relative overflow-hidden reveal">
         <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-slate-50 rounded-full blur-3xl opacity-50 -z-10 translate-x-1/3 -translate-y-1/3"></div>
         
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -310,7 +340,7 @@
         </div>
     </section>
     
-    <section id="ventajas" class="relative bg-[#f8fafc] pb-24">
+    <section id="ventajas" class="relative bg-[#f8fafc] pb-24 reveal">
         <div class="w-full bg-slate-900 pt-24 pb-48 relative overflow-hidden border-y border-slate-800">
             <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#0ea5e9 1px, transparent 1px); background-size: 30px 30px;"></div>
             <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-[600px] h-[600px] bg-[#0ea5e9]/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -376,40 +406,101 @@
             </div>
         </div>
     </section>
-    ```
-    <div class="w-full bg-slate-900 py-20 relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0iIzMzMzMzMyIvPjwvc3ZnPg==')] opacity-30"></div>
-        <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
-            <h2 class="text-4xl md:text-6xl font-black tracking-tight text-white mb-6 uppercase">
-                Catálogo Clínico
-            </h2>
-            <p class="text-slate-400 font-medium text-lg md:text-xl max-w-3xl mx-auto">
+
+<section id="proceso-diseno" class="relative py-24 bg-slate-900 border-t border-white/5 reveal">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <h2 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
+            Tu Diseño en <span class="text-[#0ea5e9]">Manos Expertas</span>
+        </h2>
+        <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+            No te preocupes por el diseño digital. Nosotros transformamos tus escaneos en estructuras perfectas, garantizando un ajuste marginal milimétrico para que tú solo te concentres en el paciente.
+        </p>
+        <div class="max-w-3xl mx-auto mb-8 px-4 py-6 rounded-[2rem] border border-[#0ea5e9]/15 bg-slate-800/80 shadow-lg shadow-[#0ea5e9]/10">
+            <p class="text-xs uppercase tracking-[0.3em] text-[#0ea5e9] font-semibold mb-3">Catálogo Clínico</p>
+            <p class="text-slate-300 text-base leading-relaxed">
                 Seleccionamos exclusivamente bloques e insumos premium homologados. Diseñados para brindar resultados estéticos, funcionales y predecibles.
             </p>
         </div>
+        <div class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div class="bg-white rounded-[2rem] border border-slate-200 p-6 shadow-lg shadow-slate-200/40">
+                <p class="text-xs uppercase tracking-[0.3em] text-slate-500 font-semibold mb-3">Archivos recibidos</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-3">STL • OBJ • PLY</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    Envíe su modelo dental tal como lo genera su escáner o software CAD. Recibimos los formatos más usados para una producción segura.
+                </p>
+            </div>
+            <div class="bg-white rounded-[2rem] border border-slate-200 p-6 shadow-lg shadow-slate-200/40">
+                <p class="text-xs uppercase tracking-[0.3em] text-slate-500 font-semibold mb-3">Servicio premium</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-3">Validación garantizada</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    Revisamos cada archivo antes de la producción para asegurar compatibilidad, precisión y un resultado estético imbatible.
+                </p>
+            </div>
+        </div>
+        <p class="text-slate-400 text-sm uppercase tracking-[0.22em] font-semibold mb-6">
+            ¡Explora el modelo 3D real!
+        </p>
     </div>
 
-<section id="servicios" class="py-24 bg-[#f8fafc] relative z-30">
+    <div class="max-w-5xl mx-auto px-6 mt-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-[#0ea5e9]/30 via-[#0ea5e9]/10 to-[#0ea5e9]/30 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative bg-slate-900/50 backdrop-blur rounded-[2rem] overflow-hidden border border-[#0ea5e9]/40 shadow-2xl shadow-[#0ea5e9]/30">
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.05)_1px,transparent_1px)] bg-[size:45px_45px] pointer-events-none rounded-[2rem]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] pointer-events-none"></div>
+                    <div class="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#0ea5e9]/20 to-transparent pointer-events-none rounded-[1.75rem]"></div>
+                    <div class="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-[#0ea5e9]/20 to-transparent pointer-events-none rounded-[1.75rem]"></div>
+                    <div id="stl-container" style="width: 100%; height: 340px; background: linear-gradient(135deg, #0f172a 0%, #1a2332 50%, #0f172a 100%); border-radius: 2rem; overflow: hidden; position: relative; z-10;"></div>
+                </div>
+            </div>
+
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-[#0ea5e9]/30 via-[#0ea5e9]/10 to-[#0ea5e9]/30 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative bg-slate-900/50 backdrop-blur rounded-[2rem] overflow-hidden border border-[#0ea5e9]/40 shadow-2xl shadow-[#0ea5e9]/30">
+                    <div class="relative h-[340px] bg-transparent">
+                        <video id="video-dientes" class="absolute inset-0 w-full h-full object-cover" muted autoplay playsinline preload="metadata" style="display:block;">
+                            <source src="images/VideoDientes.mp4" type="video/mp4">
+                            Tu navegador no soporta video HTML5.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="servicios" class="py-24 bg-[#f8fafc] relative z-30 reveal">
         <div class="max-w-7xl mx-auto px-6">
-            
+            <div class="max-w-3xl mx-auto text-center mb-12">
+                <div class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-[#0ea5e9]/10 text-[#0ea5e9] font-black tracking-[0.35em] text-[10px] uppercase mb-4">
+                    Materiales de alto impacto
+                </div>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-slate-900 mb-4">
+                    Soluciones CAD/CAM que transforman cada caso clínico
+                </h2>
+                <p class="text-slate-500 text-base md:text-lg leading-relaxed">
+                    Desde Zirconio Multicapa hasta PMMA temporal, cada material ofrece la combinación ideal entre estética, resistencia y previsibilidad para tu laboratorio.
+                </p>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 
-                <div id="zirconio" class="service-card group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden ring-2 ring-transparent hover:ring-[#0ea5e9]/20 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1" onclick="irAWhatsapp()">
+                <div id="zirconio" class="service-card reveal group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden ring-2 ring-transparent hover:ring-[#0ea5e9]/20 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1" onclick="irAWhatsapp()">
                     
                     <div class="absolute top-5 left-5 bg-[#0ea5e9] text-white font-black text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-md z-20 shadow-sm flex items-center gap-1.5">
                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         Más Solicitado
                     </div>
 
-                    <div class="mt-8 mb-5 bg-slate-50 rounded-2xl p-4 flex items-center justify-center h-[180px] group-hover:bg-sky-50/50 transition-colors border border-slate-100 relative">
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-100/50 rounded-2xl"></div>
-                        <img src="images/Zirconio.png" alt="Zirconio Multicapa" class="relative z-10 w-[80%] h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105">
+                    <div class="mt-8 mb-5 pro-image-frame h-[180px] relative">
+                        <img src="images/Zirconio.png" alt="Zirconio Multicapa" class="relative z-10 w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
                     </div>
 
                     <div class="flex-grow flex flex-col">
                         <h3 class="font-black text-2xl text-slate-900 mb-2 tracking-tight group-hover:text-[#0ea5e9] transition-colors">Zirconio Multicapa</h3>
                         <p class="text-slate-500 text-sm leading-relaxed mb-5 font-medium">
-                            Gradiente de color integrado de dentina a esmalte. Resistencia y estética en un solo material monolítico.
+                            Zirconio Multicapa con transición cromática exacta de dentina a esmalte. Fuerza clínica y estética natural en coronas unitarias y puentes extensos.
                         </p>
                         
                         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
@@ -425,20 +516,20 @@
                     </div>
                 </div>
 
-                <div id="disilicato" class="service-card group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
+                <div id="disilicato" class="service-card reveal group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
                     
                     <div class="absolute top-5 left-5 bg-slate-100 text-slate-600 font-black text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-md z-20 border border-slate-200">
                         Estética Premium
                     </div>
 
-                    <div class="mt-8 mb-5 bg-slate-50 rounded-2xl p-4 flex items-center justify-center h-[180px] group-hover:bg-slate-100/50 transition-colors border border-slate-100 relative">
-                        <img src="images/Corona.png" alt="Disilicato" class="relative z-10 w-[80%] h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105">
+                    <div class="mt-8 mb-5 pro-image-frame h-[180px] relative">
+                        <img src="images/Corona.png" alt="Disilicato" class="relative z-10 w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
                     </div>
 
                     <div class="flex-grow flex flex-col">
                         <h3 class="font-black text-2xl text-slate-900 mb-2 tracking-tight group-hover:text-[#0ea5e9] transition-colors">Disilicato de Litio</h3>
                         <p class="text-slate-500 text-sm leading-relaxed mb-5 font-medium">
-                            El estándar de oro en estética dental. Mimetismo natural perfecto con translucidez insuperable.
+                            El estándar de oro en estética anterior. Translucidez viva, color estable y mimetismo natural para restauraciones premium.
                         </p>
                         
                         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
@@ -454,20 +545,20 @@
                     </div>
                 </div>
 
-                <div id="pmma" class="service-card group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
+                <div id="pmma" class="service-card reveal group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
                     
                     <div class="absolute top-5 left-5 bg-slate-100 text-slate-600 font-black text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-md z-20 border border-slate-200">
                         Provisionales
                     </div>
 
-                    <div class="mt-8 mb-5 bg-slate-50 rounded-2xl p-4 flex items-center justify-center h-[180px] group-hover:bg-slate-100/50 transition-colors border border-slate-100 relative">
-                        <img src="images/pmma.png" alt="PMMA" class="relative z-10 w-[80%] h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105">
+                    <div class="mt-8 mb-5 pro-image-frame h-[180px] relative">
+                        <img src="images/pmma.png" alt="PMMA" class="relative z-10 w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
                     </div>
 
                     <div class="flex-grow flex flex-col">
                         <h3 class="font-black text-2xl text-slate-900 mb-2 tracking-tight group-hover:text-[#0ea5e9] transition-colors">PMMA Alta Densidad</h3>
                         <p class="text-slate-500 text-sm leading-relaxed mb-5 font-medium">
-                            Resina acrílica fresada libre de monómero residual. Temporales duraderos que no cambian de color.
+                            Provisionales fresados en PMMA de alta densidad para función estable, estética limpia y biocompatibilidad superior.
                         </p>
                         
                         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
@@ -483,20 +574,20 @@
                     </div>
                 </div>
 
-                <div id="cera" class="service-card group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
+                <div id="cera" class="service-card reveal group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
                     
                     <div class="absolute top-5 left-5 bg-slate-100 text-slate-600 font-black text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-md z-20 border border-slate-200">
                         Flujo Mixto
                     </div>
 
-                    <div class="mt-8 mb-5 bg-slate-50 rounded-2xl p-4 flex items-center justify-center h-[180px] group-hover:bg-slate-100/50 transition-colors border border-slate-100 relative">
-                        <img src="images/cera.png" alt="Cera Calcinable" class="relative z-10 w-[80%] h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105">
+                    <div class="mt-8 mb-5 pro-image-frame h-[180px] relative">
+                        <img src="images/cera.png" alt="Cera Calcinable" class="relative z-10 w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
                     </div>
 
                     <div class="flex-grow flex flex-col">
                         <h3 class="font-black text-2xl text-slate-900 mb-2 tracking-tight group-hover:text-[#0ea5e9] transition-colors">Fresado en Cera</h3>
                         <p class="text-slate-500 text-sm leading-relaxed mb-5 font-medium">
-                            Patrones de cera calcinable mecanizados digitalmente para procesos analógicos posteriores.
+                            Patrones de cera calcinable mecanizados digitalmente con precisión de ajuste para moldes y procesos analógicos sin sorpresas.
                         </p>
                         
                         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
@@ -512,20 +603,20 @@
                     </div>
                 </div>
 
-                <div id="guias" class="service-card group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
+                <div id="guias" class="service-card reveal group bg-white rounded-3xl p-6 border border-slate-200 flex flex-col h-full cursor-pointer relative overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300" onclick="irAWhatsapp()">
                     
                     <div class="absolute top-5 left-5 bg-slate-100 text-slate-600 font-black text-[9px] uppercase tracking-widest px-3 py-1.5 rounded-md z-20 border border-slate-200">
                         Especialidades
                     </div>
 
-                    <div class="mt-8 mb-5 bg-slate-50 rounded-2xl p-4 flex items-center justify-center h-[180px] group-hover:bg-slate-100/50 transition-colors border border-slate-100 relative">
-                        <img src="images/placas.png" alt="Placas y Guías" class="relative z-10 w-[80%] h-full object-contain drop-shadow-md transition-transform duration-500 group-hover:scale-105">
+                    <div class="mt-8 mb-5 pro-image-frame h-[180px] relative">
+                        <img src="images/placas.png" alt="Placas y Guías" class="relative z-10 w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
                     </div>
 
                     <div class="flex-grow flex flex-col">
                         <h3 class="font-black text-2xl text-slate-900 mb-2 tracking-tight group-hover:text-[#0ea5e9] transition-colors">Placas y Guías</h3>
                         <p class="text-slate-500 text-sm leading-relaxed mb-5 font-medium">
-                            Máxima fidelidad mediante fresado de bloques acrílicos o resinas de alta resistencia.
+                            Placas y guías fresadas con estabilidad dimensional y superficie precisa para un ajuste quirúrgico y protésico impecable.
                         </p>
                         
                         <div class="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
@@ -678,7 +769,10 @@
                 
                 <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
                     <div class="h-64 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 font-bold tracking-widest text-xs mb-6 overflow-hidden relative">
-                        <span class="z-10 bg-white/80 px-4 py-2 rounded shadow-sm">ESPERANDO FOTOGRAFÍA</span>
+                        <div class="loading-indicator z-10 flex items-center gap-2 text-slate-500 uppercase tracking-[0.35em] font-black text-[10px]">
+                            <span class="loading-spinner"></span>
+                            Cargando...
+                        </div>
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-200 to-transparent"></div>
                         <div class="absolute bottom-4 right-4 bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow-lg uppercase tracking-widest">Caso Clínico 01</div>
                     </div>
@@ -690,7 +784,10 @@
                 
                 <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
                     <div class="h-64 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 font-bold tracking-widest text-xs mb-6 overflow-hidden relative">
-                        <span class="z-10 bg-white/80 px-4 py-2 rounded shadow-sm">ESPERANDO FOTOGRAFÍA</span>
+                        <div class="loading-indicator z-10 flex items-center gap-2 text-slate-500 uppercase tracking-[0.35em] font-black text-[10px]">
+                            <span class="loading-spinner"></span>
+                            Cargando...
+                        </div>
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-200 to-transparent"></div>
                         <div class="absolute bottom-4 right-4 bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow-lg uppercase tracking-widest">Caso Clínico 02</div>
                     </div>
@@ -702,7 +799,10 @@
 
                 <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group">
                     <div class="h-64 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 font-bold tracking-widest text-xs mb-6 overflow-hidden relative">
-                        <span class="z-10 bg-white/80 px-4 py-2 rounded shadow-sm">ESPERANDO FOTOGRAFÍA</span>
+                        <div class="loading-indicator z-10 flex items-center gap-2 text-slate-500 uppercase tracking-[0.35em] font-black text-[10px]">
+                            <span class="loading-spinner"></span>
+                            Cargando...
+                        </div>
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-200 to-transparent"></div>
                         <div class="absolute bottom-4 right-4 bg-slate-900 text-white text-[10px] font-black px-3 py-1.5 rounded-lg shadow-lg uppercase tracking-widest">Caso Clínico 03</div>
                     </div>
@@ -865,7 +965,7 @@
 
            id="whatsappBtn"
 
-           class="relative bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_30px_rgba(37,211,102,0.5)] hover:bg-[#128C7E] hover:scale-110 active:scale-95 transition-all duration-300 group">
+           class="relative whatsapp-pulse bg-[#25D366] text-white p-4 rounded-full shadow-[0_10px_30px_rgba(37,211,102,0.5)] hover:bg-[#128C7E] hover:scale-110 active:scale-95 transition-all duration-300 group">
 
            
 
@@ -879,44 +979,113 @@
 
     </div>
 
+    <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Lógica del Menú Mobile
-            const openBtn = document.getElementById('open-menu-btn');
-            const closeBtn = document.getElementById('close-menu-btn');
-            const sidebar = document.getElementById('mobile-sidebar');
-            const overlay = document.getElementById('mobile-overlay');
+        const container = document.getElementById('stl-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
 
-           const toggleMenu = () => {
-                sidebar.classList.toggle('translate-x-full');
-                overlay.classList.toggle('hidden');
+        const loader = new THREE.STLLoader();
+        loader.load('models/Dientes3D.stl', function (geometry) {
+            // Centrar la geometría en el origen
+            geometry.center();
+            geometry.translate(0, 0, 0);
+            
+            // Material completamente mate sin brillos especulares
+            const material = new THREE.MeshStandardMaterial({ 
+                color: 0xe8d4c0,
+                roughness: 1,
+                metalness: 0
+            }); 
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.name = 'toothMesh'; // Para identificarlo en animate()
+            
+            // Posicionar en el centro de la escena
+            mesh.position.set(0, 0, 0);
+            mesh.rotation.y = Math.PI; // Girar 180 grados para que mire al frente
+            scene.add(mesh);
+            
+            // Ajustar cámara para que se vea el modelo centrado
+            const box = new THREE.Box3().setFromObject(mesh);
+            const size = box.getSize(new THREE.Vector3()).length();
+            
+            camera.position.x = size * 0.4;
+            camera.position.y = size * 0.3;
+            camera.position.z = size * 0.5;
+            camera.lookAt(0, 0, 0);
+        }, 
+        (xhr) => console.log(Math.round(xhr.loaded / xhr.total * 100) + '% cargado'),
+        (error) => console.error('Error cargando el STL:', error));
+
+        // Iluminación con sombras para destacar detalles
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+        
+        const light1 = new THREE.DirectionalLight(0xffffff, 0.8);
+        light1.position.set(30, 30, 40);
+        scene.add(light1);
+        
+        const light2 = new THREE.DirectionalLight(0xffffff, 0.2);
+        light2.position.set(-30, -30, -40);
+        scene.add(light2);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            // ROTACIÓN AUTOMÁTICA - el diente gira con más velocidad
+            const mesh = scene.getObjectByName('toothMesh');
+            if (mesh) {
+                mesh.rotation.x += 0.003;
+                mesh.rotation.y += 0.005;
+            }
+            renderer.render(scene, camera);
+        }
+
+        function resizeRenderer() {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        }
+
+        window.addEventListener('resize', resizeRenderer);
+        window.addEventListener('orientationchange', resizeRenderer);
+        resizeRenderer();
+
+        animate();
+
+        const videoDientes = document.getElementById('video-dientes');
+        if (videoDientes) {
+            videoDientes.loop = false;
+            videoDientes.muted = true;
+            videoDientes.autoplay = true;
+            videoDientes.playsInline = true;
+            videoDientes.playbackRate = 1.35;
+
+            const reproducirVideo = () => {
+                if (videoDientes.currentTime < 18) {
+                    videoDientes.currentTime = 18;
+                }
+                const playPromise = videoDientes.play();
+                if (playPromise && playPromise.catch) {
+                    playPromise.catch(() => {
+                        // El navegador puede bloquear autoplay, pero el video debe reintentarse.
+                    });
+                }
             };
 
-            openBtn?.addEventListener('click', toggleMenu);
-            closeBtn?.addEventListener('click', toggleMenu);
-            overlay?.addEventListener('click', toggleMenu);
-            
-            // Cerrar menú al hacer click en un link
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                link.addEventListener('click', toggleMenu);
+            videoDientes.addEventListener('loadedmetadata', () => {
+                videoDientes.currentTime = 18;
+                reproducirVideo();
             });
-
-            // Animación al hacer scroll para la cabecera
-            const header = document.querySelector('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('bg-slate-900/95', 'backdrop-blur-xl', 'shadow-2xl');
-                    header.classList.remove('bg-transparent', 'pt-6');
-                    header.classList.add('py-3');
-                } else {
-                    header.classList.remove('bg-slate-900/95', 'backdrop-blur-xl', 'shadow-2xl', 'py-3');
-                    header.classList.add('bg-transparent', 'pt-6');
-                }
+            videoDientes.addEventListener('ended', () => {
+                videoDientes.currentTime = 18;
+                reproducirVideo();
             });
-        });
-
-        function irAWhatsapp() {
-            window.open("https://wa.me/573142194594", "_blank");
         }
     </script>
 </body>
