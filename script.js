@@ -150,6 +150,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         scrollCards.forEach(card => cardObserver.observe(card));
     }
+
+    const videoElements = document.querySelectorAll('video');
+    const tryPlayVideos = () => {
+        videoElements.forEach(video => {
+            if (video.paused && video.muted) {
+                video.play().catch(() => {
+                    // Si el autoplay está bloqueado, no romperá la página.
+                });
+            }
+        });
+    };
+
+    document.addEventListener('click', tryPlayVideos, { once: true, passive: true });
+    document.addEventListener('touchstart', tryPlayVideos, { once: true, passive: true });
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            tryPlayVideos();
+        }
+    });
 });
 
 function irAWhatsapp() {
