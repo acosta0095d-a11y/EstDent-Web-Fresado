@@ -229,7 +229,7 @@
 
 <main id="inicio" class="relative w-full h-[110vh] md:h-[115vh] min-h-screen flex items-center justify-center overflow-hidden bg-slate-900 border-b-8 border-[#0ea5e9] reveal">
         <div class="absolute inset-0 z-0">
-            <video src="images/fresado.mp4" preload="metadata" autoplay loop muted playsinline class="w-full h-full object-cover opacity-60"></video>
+            <video src="images/fresado.mp4" preload="auto" autoplay loop muted playsinline webkit-sinline webkit-playsinline class="w-full h-full object-cover opacity-60"></video>
             <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/70 to-transparent"></div>
         </div>
 
@@ -459,7 +459,7 @@
                 <div class="absolute -inset-1 bg-gradient-to-r from-[#0ea5e9]/30 via-[#0ea5e9]/10 to-[#0ea5e9]/30 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative bg-slate-900/50 backdrop-blur rounded-[2rem] overflow-hidden border border-[#0ea5e9]/40 shadow-2xl shadow-[#0ea5e9]/30">
                     <div class="relative h-[340px] bg-transparent">
-                        <video id="video-dientes" class="absolute inset-0 w-full h-full object-cover" muted autoplay playsinline preload="metadata" style="display:block;">
+                        <video id="video-dientes" class="absolute inset-0 w-full h-full object-cover" muted autoplay loop playsinline webkit-playsinline preload="autoinline preload="auto" style="display:block;">
                             <source src="images/VideoDientes.mp4" type="video/mp4">
                             Tu navegador no soporta video HTML5.
                         </video>
@@ -683,7 +683,7 @@
                         </div>
                         
                         <div class="relative flex-grow rounded-b-[2rem] overflow-hidden bg-black">
-                            <video src="images/fresado.mp4" preload="metadata" autoplay loop muted playsinline class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-[3s]"></video>
+                            <video src="images/fresado.mp4" preload="auto" autoplay loop muted playsinline webkit-sinline webkit-playsinline class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-[3s]"></video>
                             
                             <div class="absolute inset-0 border-[1px] border-white/10 pointer-events-none m-4 rounded-xl"></div>
                             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 border border-white/20 rounded-full flex items-center justify-center pointer-events-none transition-all duration-500 group-hover:scale-110">
@@ -1060,8 +1060,8 @@
 
         const videoDientes = document.getElementById('video-dientes');
         if (videoDientes) {
-            videoDientes.preload = 'metadata';
-            videoDientes.loop = false;
+            videoDientes.preload = 'auto';
+            videoDientes.loop = true;
             videoDientes.muted = true;
             videoDientes.autoplay = true;
             videoDientes.playsInline = true;
@@ -1079,11 +1079,5 @@
             videoDientes.addEventListener('loadedmetadata', () => {
                 reproducirVideo();
             });
-            videoDientes.addEventListener('ended', () => {
-                videoDientes.currentTime = 0;
-                reproducirVideo();
-            });
         }
-    </script>
-</body>
 </html>
