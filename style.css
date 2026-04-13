@@ -134,6 +134,24 @@ video::-webkit-media-controls-panel {
     position: relative !important;
     z-index: 50 !important;
     display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#stl-status {
+    z-index: 49 !important;
+}
+
+/* Ensure decorative elements don't cover the 3D container */
+.relative.bg-slate-900\/50 {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+}
+
+.relative.bg-slate-900\/50 > .absolute.inset-0 {
+    pointer-events: none;
+    z-index: 1 !important;
 }
 
 /* -----------------------------------------
