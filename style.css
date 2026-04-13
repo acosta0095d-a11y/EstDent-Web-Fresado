@@ -120,6 +120,16 @@ video::-webkit-media-controls-panel {
     overflow: hidden !important;
 }
 
+.stl-container-styles {
+    width: 100%;
+    height: 340px;
+    background: linear-gradient(135deg, #0f172a 0%, #1a2332 50%, #0f172a 100%);
+    border-radius: 2rem;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
 /* -----------------------------------------
    5.1 HERO Y HEADER 100% RESPONSIVE
    ----------------------------------------- */
