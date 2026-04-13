@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const hamburgerButton = openBtn;
     const isMenuOpen = () => document.body.classList.contains('menu-open');
-    const isMobileScreen = () => window.matchMedia('(max-width: 1023px)').matches;
+    const isMobileScreen = () => window.matchMedia('(max-width: 1024px)').matches;
     const updateHamburgerVisibility = () => {
         if (!hamburgerButton) return;
         if (isMenuOpen()) {
@@ -41,15 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
             hamburgerButton.classList.remove('hidden');
             hamburgerButton.classList.add('show-mobile');
             hamburgerButton.classList.remove('show-desktop');
+            return;
+        }
+
+        hamburgerButton.classList.remove('show-mobile');
+        hamburgerButton.classList.remove('show-desktop');
+        if (window.scrollY > 50) {
+            hamburgerButton.classList.remove('hidden');
+            hamburgerButton.classList.add('show-desktop');
         } else {
-            hamburgerButton.classList.remove('show-mobile');
-            hamburgerButton.classList.remove('show-desktop');
-            if (window.scrollY > 50) {
-                hamburgerButton.classList.remove('hidden');
-                hamburgerButton.classList.add('show-desktop');
-            } else {
-                hamburgerButton.classList.add('hidden');
-            }
+            hamburgerButton.classList.add('hidden');
         }
     };
 

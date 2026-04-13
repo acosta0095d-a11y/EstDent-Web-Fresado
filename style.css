@@ -275,7 +275,13 @@ main#inicio + .w-full.bg-[#0ea5e9] {
 
 .floating-hamburger.show-mobile,
 .floating-hamburger.show-desktop {
-    display: flex;
+    display: flex !important;
+}
+
+@media (max-width: 1024px) {
+    .floating-hamburger {
+        display: flex !important;
+    }
 }
 
 #mobile-sidebar .sidebar-link {
