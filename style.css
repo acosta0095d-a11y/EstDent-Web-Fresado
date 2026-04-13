@@ -127,7 +127,13 @@ video::-webkit-media-controls-panel {
     border-radius: 2rem;
     overflow: hidden;
     position: relative;
-    z-index: 10;
+    z-index: 50;
+}
+
+.stl-container-styles canvas {
+    position: relative !important;
+    z-index: 50 !important;
+    display: block !important;
 }
 
 /* -----------------------------------------

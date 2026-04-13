@@ -450,11 +450,11 @@
             <div class="relative group">
                 <div class="absolute -inset-1 bg-gradient-to-r from-[#0ea5e9]/30 via-[#0ea5e9]/10 to-[#0ea5e9]/30 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative bg-slate-900/50 backdrop-blur rounded-[2rem] overflow-hidden border border-[#0ea5e9]/40 shadow-2xl shadow-[#0ea5e9]/30">
-                    <div class="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.05)_1px,transparent_1px)] bg-[size:45px_45px] pointer-events-none rounded-[2rem]"></div>
-                    <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] pointer-events-none"></div>
-                    <div class="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#0ea5e9]/20 to-transparent pointer-events-none rounded-[1.75rem]"></div>
-                    <div class="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-[#0ea5e9]/20 to-transparent pointer-events-none rounded-[1.75rem]"></div>
-                    <div id="stl-container" class="stl-container-styles">
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.05)_1px,transparent_1px)] bg-[size:45px_45px] pointer-events-none rounded-[2rem]" style="z-index: 1;"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] pointer-events-none" style="z-index: 2;"></div>
+                    <div class="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-[#0ea5e9]/20 to-transparent pointer-events-none rounded-[1.75rem]" style="z-index: 1;"></div>
+                    <div class="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-[#0ea5e9]/20 to-transparent pointer-events-none rounded-[1.75rem]" style="z-index: 1;"></div>
+                    <div id="stl-container" class="stl-container-styles" style="z-index: 50;">
                         <div id="stl-status" class="absolute inset-0 flex items-center justify-center text-slate-200 text-sm font-bold bg-slate-950/70">Cargando modelo 3D...</div>
                     </div>
                 </div>
