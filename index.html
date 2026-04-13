@@ -462,7 +462,7 @@
                 <div class="absolute -inset-1 bg-gradient-to-r from-[#0ea5e9]/30 via-[#0ea5e9]/10 to-[#0ea5e9]/30 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative bg-slate-900/50 backdrop-blur rounded-[2rem] overflow-hidden border border-[#0ea5e9]/40 shadow-2xl shadow-[#0ea5e9]/30">
                     <div class="relative h-[340px] bg-transparent">
-                        <video id="video-dientes" poster="images/fresadora.png" class="absolute inset-0 w-full h-full object-cover" muted autoplay loop playsinline webkit-playsinline preload="auto" style="display:block;">
+                        <video id="video-dientes" poster="images/fresadora.png" class="absolute inset-0 w-full h-full object-cover" muted autoplay loop playsinline webkit-playsinline preload="auto">
                             <source src="images/VideoDientes.mp4" type="video/mp4">
                             Tu navegador no soporta video HTML5.
                         </video>
@@ -987,103 +987,144 @@
 
     <script src="script.js"></script>
     <script>
-        const container = document.getElementById('stl-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.appendChild(renderer.domElement);
-
-        const loader = new THREE.STLLoader();
-        loader.load('models/Dientes3D.stl', function (geometry) {
-            // Centrar la geometría en el origen
-            geometry.center();
-            geometry.translate(0, 0, 0);
-            
-            // Material completamente mate sin brillos especulares
-            const material = new THREE.MeshStandardMaterial({ 
-                color: 0xe8d4c0,
-                roughness: 1,
-                metalness: 0
-            }); 
-            const mesh = new THREE.Mesh(geometry, material);
-            mesh.name = 'toothMesh'; // Para identificarlo en animate()
-            
-            // Posicionar en el centro de la escena
-            mesh.position.set(0, 0, 0);
-            mesh.rotation.y = Math.PI; // Girar 180 grados para que mire al frente
-            scene.add(mesh);
-            
-            // Ajustar cámara para que se vea el modelo centrado
-            const box = new THREE.Box3().setFromObject(mesh);
-            const size = box.getSize(new THREE.Vector3()).length();
-            
-            camera.position.x = size * 0.4;
-            camera.position.y = size * 0.3;
-            camera.position.z = size * 0.5;
-            camera.lookAt(0, 0, 0);
-        }, 
-        (xhr) => console.log(Math.round(xhr.loaded / xhr.total * 100) + '% cargado'),
-        (error) => console.error('Error cargando el STL:', error));
-
-        // Iluminación con sombras para destacar detalles
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-        scene.add(ambientLight);
-        
-        const light1 = new THREE.DirectionalLight(0xffffff, 0.8);
-        light1.position.set(30, 30, 40);
-        scene.add(light1);
-        
-        const light2 = new THREE.DirectionalLight(0xffffff, 0.2);
-        light2.position.set(-30, -30, -40);
-        scene.add(light2);
-
-        function animate() {
-            requestAnimationFrame(animate);
-            // ROTACIÓN AUTOMÁTICA - el diente gira con más velocidad
-            const mesh = scene.getObjectByName('toothMesh');
-            if (mesh) {
-                mesh.rotation.x += 0.003;
-                mesh.rotation.y += 0.005;
+        // Inicializar 3D cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('stl-container');
+            if (!container) {
+                console.error('Contenedor STL no encontrado');
+                return;
             }
-            renderer.render(scene, camera);
-        }
 
-        function resizeRenderer() {
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        }
+            try {
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                renderer.setClearColor(0x0f172a, 0); // Fondo transparente
+                container.appendChild(renderer.domElement);
 
-        window.addEventListener('resize', resizeRenderer);
-        window.addEventListener('orientationchange', resizeRenderer);
-        resizeRenderer();
+                const loader = new THREE.STLLoader();
+                loader.load('models/Dientes3D.stl', function (geometry) {
+                    console.log('STL cargado exitosamente');
+                    
+                    // Centrar la geometría
+                    geometry.center();
+                    
+                    // Material mate
+                    const material = new THREE.MeshStandardMaterial({ 
+                        color: 0xe8d4c0,
+                        roughness: 1,
+                        metalness: 0
+                    }); 
+                    const mesh = new THREE.Mesh(geometry, material);
+                    mesh.name = 'toothMesh';
+                    
+                    // Posicionar
+                    mesh.position.set(0, 0, 0);
+                    mesh.rotation.y = Math.PI;
+                    scene.add(mesh);
+                    
+                    // Ajustar cámara
+                    const box = new THREE.Box3().setFromObject(mesh);
+                    const size = box.getSize(new THREE.Vector3()).length();
+                    
+                    camera.position.x = size * 0.4;
+                    camera.position.y = size * 0.3;
+                    camera.position.z = size * 0.5;
+                    camera.lookAt(0, 0, 0);
+                    
+                    console.log('Modelo 3D inicializado');
+                }, 
+                (xhr) => console.log(Math.round(xhr.loaded / xhr.total * 100) + '% cargado'),
+                (error) => console.error('Error cargando el STL:', error));
 
-        animate();
+                // Iluminación
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+                scene.add(ambientLight);
+                
+                const light1 = new THREE.DirectionalLight(0xffffff, 0.8);
+                light1.position.set(30, 30, 40);
+                scene.add(light1);
+                
+                const light2 = new THREE.DirectionalLight(0xffffff, 0.2);
+                light2.position.set(-30, -30, -40);
+                scene.add(light2);
 
-        const videoDientes = document.getElementById('video-dientes');
-        if (videoDientes) {
-            videoDientes.preload = 'auto';
-            videoDientes.loop = true;
-            videoDientes.muted = true;
-            videoDientes.autoplay = true;
-            videoDientes.playsInline = true;
-            videoDientes.playbackRate = 1.35;
-
-            const reproducirVideo = () => {
-                const playPromise = videoDientes.play();
-                if (playPromise && playPromise.catch) {
-                    playPromise.catch(() => {
-                        // El navegador puede bloquear autoplay, pero el video debe reintentarse.
-                    });
+                function animate() {
+                    requestAnimationFrame(animate);
+                    const mesh = scene.getObjectByName('toothMesh');
+                    if (mesh) {
+                        mesh.rotation.x += 0.003;
+                        mesh.rotation.y += 0.005;
+                    }
+                    renderer.render(scene, camera);
                 }
-            };
 
-            videoDientes.addEventListener('loadedmetadata', () => {
-                reproducirVideo();
-            });
-        }
+                function resizeRenderer() {
+                    if (!container) return;
+                    const width = container.clientWidth;
+                    const height = container.clientHeight;
+                    renderer.setSize(width, height);
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                }
+
+                window.addEventListener('resize', resizeRenderer);
+                window.addEventListener('orientationchange', resizeRenderer);
+                
+                // Forzar resize inicial
+                setTimeout(resizeRenderer, 100);
+                
+                animate();
+                console.log('Animación 3D iniciada');
+
+            } catch (error) {
+                console.error('Error inicializando Three.js:', error);
+            }
+
+            // Configurar video
+            const videoDientes = document.getElementById('video-dientes');
+            if (videoDientes) {
+                console.log('Configurando video...');
+                
+                videoDientes.loop = true;
+                videoDientes.muted = true;
+                videoDientes.autoplay = true;
+                videoDientes.playsInline = true;
+                videoDientes.playbackRate = 1.35;
+
+                const intentarReproducir = () => {
+                    const playPromise = videoDientes.play();
+                    if (playPromise) {
+                        playPromise.then(() => {
+                            console.log('Video reproduciéndose');
+                        }).catch((error) => {
+                            console.warn('Autoplay bloqueado, esperando interacción del usuario:', error);
+                            // Intentar de nuevo en interacción del usuario
+                            const retryPlay = () => {
+                                videoDientes.play().catch(() => {});
+                                document.removeEventListener('click', retryPlay);
+                                document.removeEventListener('touchstart', retryPlay);
+                            };
+                            document.addEventListener('click', retryPlay, { once: true });
+                            document.addEventListener('touchstart', retryPlay, { once: true });
+                        });
+                    }
+                };
+
+                if (videoDientes.readyState >= 2) {
+                    intentarReproducir();
+                } else {
+                    videoDientes.addEventListener('loadeddata', intentarReproducir);
+                }
+
+                videoDientes.addEventListener('error', (e) => {
+                    console.error('Error en video:', e);
+                });
+            } else {
+                console.error('Video no encontrado');
+            }
+        });
+    </script>
 </html>
