@@ -525,3 +525,24 @@ img[src*="Logo"], img[src*="logo"] {
     aspect-ratio: auto !important; /* Obliga a mantener la proporción original */
     display: block;
 }
+
+/* -----------------------------------------
+   7. ANIMACIONES DE ENTRADA (REVEAL)
+   ----------------------------------------- */
+.reveal {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    visibility: visible !important;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal:not(.in-view) {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
