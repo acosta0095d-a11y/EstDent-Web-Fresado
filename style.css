@@ -72,6 +72,11 @@ details > summary::-webkit-details-marker {
 /* -----------------------------------------
    5. AJUSTE DE VIDEO DE FONDO
    ----------------------------------------- */
+/* Override para el video de proceso (contenedor con padding-top 16:9) */
+#video-dientes {
+    aspect-ratio: unset !important;
+}
+
 /* Asegura que el video cinematográfico nunca se deforme */
 video {
     object-fit: cover;
@@ -104,54 +109,6 @@ main#inicio {
 
 video::-webkit-media-controls-panel {
     background-color: transparent;
-}
-
-#stl-container,
-#stl-container canvas {
-    width: 100% !important;
-    height: 100% !important;
-    display: block !important;
-    position: relative !important;
-    z-index: 10 !important;
-}
-
-#stl-container canvas {
-    border-radius: 2rem !important;
-    overflow: hidden !important;
-}
-
-.stl-container-styles {
-    width: 100%;
-    height: 340px;
-    background: linear-gradient(135deg, #0f172a 0%, #1a2332 50%, #0f172a 100%);
-    border-radius: 2rem;
-    overflow: hidden;
-    position: relative;
-    z-index: 50;
-}
-
-.stl-container-styles canvas {
-    position: relative !important;
-    z-index: 50 !important;
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-#stl-status {
-    z-index: 49 !important;
-}
-
-/* Ensure decorative elements don't cover the 3D container */
-.relative.bg-slate-900\/50 {
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-}
-
-.relative.bg-slate-900\/50 > .absolute.inset-0 {
-    pointer-events: none;
-    z-index: 1 !important;
 }
 
 /* -----------------------------------------
@@ -559,31 +516,48 @@ main#inicio + .w-full.bg-[#0ea5e9] {
    6. FIX LOGO: PROPORCIÓN REAL
    ----------------------------------------- */
 img[src*="Logo"], img[src*="logo"] {
-    width: auto !important;     /* El ancho se ajusta solo */
-    height: clamp(40px, 8vw, 65px) !important; /* Altura flexible según la pantalla */
-    max-width: 280px !important; /* Límite para que no sea gigante */
-    object-fit: contain !important; 
-    aspect-ratio: auto !important; /* Obliga a mantener la proporción original */
+    width: auto !important;
+    height: clamp(40px, 8vw, 65px) !important;
+    max-width: 280px !important;
+    object-fit: contain !important;
+    aspect-ratio: auto !important;
     display: block;
+}
+
+/* Override para el logo pequeño dentro del video de proceso */
+#proceso-diseno img[src*="Logo"],
+#proceso-diseno img[src*="logo"] {
+    height: 18px !important;
+    max-width: 80px !important;
 }
 
 /* -----------------------------------------
    7. ANIMACIONES DE ENTRADA (REVEAL)
    ----------------------------------------- */
+/* Sin JS: todo visible por defecto */
 .reveal {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    visibility: visible !important;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.reveal.in-view {
     opacity: 1;
     transform: translateY(0);
 }
 
-.reveal:not(.in-view) {
+/* Con JS activo: aplicar animación reveal */
+.js-reveal .reveal {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.js-reveal .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* -----------------------------------------
+   8. FONDO ANIMADO SECCIÓN PROCESO
+   ----------------------------------------- */
+@keyframes orb-drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(30px, 20px) scale(1.08); }
+    100% { transform: translate(-15px, 35px) scale(0.96); }
 }
 

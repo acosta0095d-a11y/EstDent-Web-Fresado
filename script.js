@@ -152,6 +152,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const videoElements = document.querySelectorAll('video');
+
+    // Saltar intro del video de dientes al segundo 18 (y en cada loop)
+    const videoDientes = document.getElementById('video-dientes');
+    if (videoDientes) {
+        const seekTo18 = () => {
+            if (videoDientes.duration && videoDientes.currentTime < 18) {
+                videoDientes.currentTime = 18;
+            }
+        };
+        videoDientes.addEventListener('loadedmetadata', seekTo18, { once: true });
+        videoDientes.addEventListener('canplay', seekTo18, { once: true });
+        // Detectar el loop: cuando el tiempo cae por debajo de 18 volver a seekear
+        videoDientes.addEventListener('timeupdate', () => {
+            if (videoDientes.currentTime < 17.5) {
+                videoDientes.currentTime = 18;
+            }
+        });
+    }
+
     const tryPlayVideos = () => {
         videoElements.forEach(video => {
             if (video.paused && video.muted) {
@@ -161,6 +180,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
+
+    // Reveal on scroll
+    document.body.classList.add('js-reveal');
+    const revealEls = document.querySelectorAll('.reveal');
+    if (revealEls.length > 0) {
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+        revealEls.forEach(el => {
+            // Elementos ya visibles en pantalla → activar de inmediato sin animación
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom >= 0) {
+                el.classList.add('in-view');
+            } else {
+                revealObserver.observe(el);
+            }
+        });
+    }
 
     document.addEventListener('click', tryPlayVideos, { once: true, passive: true });
     document.addEventListener('touchstart', tryPlayVideos, { once: true, passive: true });
