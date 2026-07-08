@@ -2433,8 +2433,8 @@ img[src*="Logo"], img[src*="logo"] {
 /* ─── RESPONSIVE GLOBAL ─── */
 @media (max-width: 767px) {
     main#inicio {
-        justify-content: flex-start;
-        padding-bottom: 2.75rem;
+        justify-content: center;
+        padding-bottom: 3.5rem;
     }
 
     .hero-video-bg video {
@@ -2451,24 +2451,24 @@ img[src*="Logo"], img[src*="logo"] {
     }
 
     #main-header.header-hero {
-        padding: 1.1rem 0 0.85rem;
+        padding: 1.05rem 0 0.8rem;
     }
 
     #main-header.header-hero .header-logo img {
-        height: 2.45rem;
+        height: 2.9rem;
         width: auto;
     }
 
     .hero-layout {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: center;
         flex: 1 1 auto;
         width: 100%;
-        min-height: calc(100dvh - 2.85rem);
-        padding: 3.15rem 1.1rem 0.5rem;
-        gap: 0.65rem;
+        min-height: 0;
+        padding: 1.5rem 1.1rem 1.25rem;
+        gap: 0.85rem;
         text-align: center;
     }
 
@@ -2477,7 +2477,7 @@ img[src*="Logo"], img[src*="logo"] {
         flex: 0 0 auto;
         min-height: 0;
         width: 100%;
-        max-height: 26vh;
+        max-height: 24vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2487,7 +2487,7 @@ img[src*="Logo"], img[src*="logo"] {
     .hero-machine-stage img,
     .hero-machine-stage img.machine-pulse {
         max-width: min(210px, 54vw);
-        max-height: 24vh;
+        max-height: 22vh;
         width: auto;
         height: auto;
         object-fit: contain;
@@ -2500,7 +2500,7 @@ img[src*="Logo"], img[src*="logo"] {
 
     .hero-copy {
         order: 2;
-        flex: 1 1 auto;
+        flex: 0 0 auto;
         width: 100%;
         max-width: none;
         min-height: 0;
@@ -2509,6 +2509,7 @@ img[src*="Logo"], img[src*="logo"] {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         text-align: center;
     }
 
@@ -2562,9 +2563,9 @@ img[src*="Logo"], img[src*="logo"] {
         width: 100%;
         max-width: 100%;
         align-self: center;
-        margin-top: auto;
-        padding-top: 1.35rem;
-        padding-bottom: 0.65rem;
+        margin-top: 1.1rem;
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     .hero-copy .btn-fill {
@@ -2599,6 +2600,11 @@ img[src*="Logo"], img[src*="logo"] {
     .hero-copy .btn-link::after {
         font-size: 1em;
         margin-left: 0.05em;
+    }
+
+    .whatsapp-fab {
+        bottom: 4.75rem;
+        right: 1.15rem;
     }
 
     .section-pad {
