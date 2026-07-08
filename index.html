@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         html, body {
@@ -356,7 +356,7 @@
         <div class="design-split">
             <div class="design-video-col">
                 <div class="video-compact-frame video-compact-wide design-video">
-                    <video id="video-dientes" muted autoplay loop playsinline webkit-playsinline preload="auto">
+                    <video id="video-dientes" muted autoplay loop playsinline webkit-playsinline preload="none">
                         <source src="images/VideoDientes.mp4" type="video/mp4">
                     </video>
                 </div>
@@ -451,7 +451,7 @@
                 <div class="proceso-video-wrap">
                     <div class="video-compact-lg">
                         <div class="video-compact-frame">
-                            <video preload="auto" autoplay loop muted playsinline webkit-playsinline>
+                            <video data-lazy-video preload="none" autoplay loop muted playsinline webkit-playsinline>
                                 <source src="images/fresado.mp4" type="video/mp4">
                             </video>
                         </div>
@@ -716,6 +716,6 @@
         </a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+    <script src="script.js" defer></script>
 </html>

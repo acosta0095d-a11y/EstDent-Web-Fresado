@@ -169,31 +169,56 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const tryPlayVideos = () => {
-        document.querySelectorAll('video').forEach(playVideo);
+        const heroVideo = document.getElementById('hero-bg-video');
+        if (heroVideo) playVideo(heroVideo);
+
+        document.querySelectorAll('video:not(#hero-bg-video)').forEach((video) => {
+            const rect = video.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                playVideo(video);
+            }
+        });
     };
 
     const initAllVideos = () => {
-        const videos = document.querySelectorAll('video');
+        const heroVideo = document.getElementById('hero-bg-video');
 
-        videos.forEach((video) => {
-            prepareVideo(video);
-            ['loadeddata', 'canplay', 'canplaythrough'].forEach((eventName) => {
-                video.addEventListener(eventName, () => playVideo(video), { once: true });
+        if (heroVideo) {
+            prepareVideo(heroVideo);
+            heroVideo.preload = 'auto';
+            heroVideo.playbackRate = 1;
+            ['loadeddata', 'canplay'].forEach((eventName) => {
+                heroVideo.addEventListener(eventName, () => playVideo(heroVideo), { once: true });
             });
-            if (video.readyState >= 2) {
-                playVideo(video);
+            if (heroVideo.readyState >= 2) {
+                playVideo(heroVideo);
             } else {
-                video.load();
+                heroVideo.load();
             }
-        });
+        }
 
+        const lazyVideos = document.querySelectorAll('video:not(#hero-bg-video)');
         const videoObserver = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) playVideo(entry.target);
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    if (video.dataset.lazyReady !== '1') {
+                        video.preload = 'auto';
+                        video.load();
+                        video.dataset.lazyReady = '1';
+                    }
+                    playVideo(video);
+                } else if (!video.matches('#hero-bg-video')) {
+                    video.pause();
+                }
             });
-        }, { threshold: 0.1, rootMargin: '60px 0px' });
+        }, { threshold: 0.12, rootMargin: '100px 0px' });
 
-        videos.forEach((video) => videoObserver.observe(video));
+        lazyVideos.forEach((video) => {
+            prepareVideo(video);
+            video.preload = 'none';
+            videoObserver.observe(video);
+        });
     };
 
     initAllVideos();
