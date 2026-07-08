@@ -151,6 +151,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const videoElements = document.querySelectorAll('video');
 
+    const initHeroVideo = () => {
+        const heroVideo = document.getElementById('hero-bg-video');
+        if (!heroVideo) return;
+
+        heroVideo.muted = true;
+        heroVideo.defaultMuted = true;
+        heroVideo.playsInline = true;
+        heroVideo.setAttribute('playsinline', '');
+        heroVideo.setAttribute('webkit-playsinline', '');
+        heroVideo.removeAttribute('poster');
+
+        const playHero = () => {
+            const playPromise = heroVideo.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => {});
+            }
+        };
+
+        heroVideo.addEventListener('loadeddata', playHero, { once: true });
+        heroVideo.addEventListener('canplay', playHero, { once: true });
+        heroVideo.load();
+        playHero();
+    };
+
+    initHeroVideo();
+
     const videoDientes = document.getElementById('video-dientes');
     if (videoDientes) {
         const seekTo18 = () => {
@@ -223,8 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
             tryPlayVideos();
+            initHeroVideo();
         }
     });
+    tryPlayVideos();
 
     initInfiniteCarousel({
         carouselId: 'materials-carousel',
