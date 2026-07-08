@@ -149,33 +149,54 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollCards.forEach(card => cardObserver.observe(card));
     }
 
-    const videoElements = document.querySelectorAll('video');
-
-    const initHeroVideo = () => {
-        const heroVideo = document.getElementById('hero-bg-video');
-        if (!heroVideo) return;
-
-        heroVideo.muted = true;
-        heroVideo.defaultMuted = true;
-        heroVideo.playsInline = true;
-        heroVideo.setAttribute('playsinline', '');
-        heroVideo.setAttribute('webkit-playsinline', '');
-        heroVideo.removeAttribute('poster');
-
-        const playHero = () => {
-            const playPromise = heroVideo.play();
-            if (playPromise && typeof playPromise.catch === 'function') {
-                playPromise.catch(() => {});
-            }
-        };
-
-        heroVideo.addEventListener('loadeddata', playHero, { once: true });
-        heroVideo.addEventListener('canplay', playHero, { once: true });
-        heroVideo.load();
-        playHero();
+    const prepareVideo = (video) => {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        video.removeAttribute('poster');
     };
 
-    initHeroVideo();
+    const playVideo = (video) => {
+        if (!video) return;
+        prepareVideo(video);
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+        }
+    };
+
+    const tryPlayVideos = () => {
+        document.querySelectorAll('video').forEach(playVideo);
+    };
+
+    const initAllVideos = () => {
+        const videos = document.querySelectorAll('video');
+
+        videos.forEach((video) => {
+            prepareVideo(video);
+            ['loadeddata', 'canplay', 'canplaythrough'].forEach((eventName) => {
+                video.addEventListener(eventName, () => playVideo(video), { once: true });
+            });
+            if (video.readyState >= 2) {
+                playVideo(video);
+            } else {
+                video.load();
+            }
+        });
+
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) playVideo(entry.target);
+            });
+        }, { threshold: 0.1, rootMargin: '60px 0px' });
+
+        videos.forEach((video) => videoObserver.observe(video));
+    };
+
+    initAllVideos();
 
     const videoDientes = document.getElementById('video-dientes');
     if (videoDientes) {
@@ -193,13 +214,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const tryPlayVideos = () => {
-        videoElements.forEach(video => {
-            if (video.paused && video.muted) {
-                video.play().catch(() => {});
-            }
-        });
+    const schedulePlayRetry = () => {
+        window.clearTimeout(window.__estdentPlayRetry);
+        window.__estdentPlayRetry = window.setTimeout(tryPlayVideos, 100);
     };
+
+    document.addEventListener('touchstart', schedulePlayRetry, { passive: true });
+    document.addEventListener('click', schedulePlayRetry, { passive: true });
+    window.addEventListener('pageshow', tryPlayVideos);
+    window.addEventListener('focus', tryPlayVideos);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            tryPlayVideos();
+        }
+    });
+    tryPlayVideos();
 
     document.body.classList.add('js-reveal');
     const revealEls = document.querySelectorAll('.reveal');
@@ -244,16 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.addEventListener('click', tryPlayVideos, { once: true, passive: true });
-    document.addEventListener('touchstart', tryPlayVideos, { once: true, passive: true });
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            tryPlayVideos();
-            initHeroVideo();
-        }
-    });
-    tryPlayVideos();
-
     initInfiniteCarousel({
         carouselId: 'materials-carousel',
         trackSelector: '.materials-track',
@@ -288,13 +307,13 @@ function initHeroTyped() {
     if (!el || typeof Typed === 'undefined') return;
 
     const isLargeScreen = window.innerWidth >= 1024;
-    const mobileText = 'Zirconio, disilicato y PMMA. Ajuste micrométrico y entrega ágil.';
+    const mobileText = 'Para odontólogos, laboratorios, clínicas y talleres metálicos. Zirconio, disilicato y PMMA con inLab MC X5 — ajuste micrométrico y entrega ágil.';
     const desktopText = 'Para odontólogos, laboratorios, clínicas, talleres metálicos y técnicos que necesitan fresado de confianza. Estructuras en zirconio, disilicato y PMMA con inLab MC X5 — ajuste marginal micrométrico y entrega ágil.';
     const fullText = isLargeScreen ? desktopText : mobileText;
 
     new Typed(el, {
         strings: [fullText],
-        typeSpeed: 14,
+        typeSpeed: isLargeScreen ? 14 : 11,
         backSpeed: 0,
         showCursor: true,
         cursorChar: '|',
